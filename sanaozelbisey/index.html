@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sana Özel Bir Şey</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+        }
+
+        /* ARKA PLAN VİDEO - KESİN ÇALIŞAN VERSİYON */
+        #bgVideo {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -100;
+            transform: translateX(-50%) translateY(-50%);
+            object-fit: cover;
+        }
+
+        .overlay-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hearts-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.15;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .glow-pulse {
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(255,255,255,0.5),
+                           0 0 40px rgba(255,20,147,0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(255,255,255,0.8),
+                           0 0 60px rgba(255,20,147,0.6);
+            }
+        }
+
+        .blur-bg {
+            backdrop-filter: blur(10px);
+        }
+
+        .content-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .photo-carousel {
+            width: 280px;
+            height: 280px;
+            border: 6px solid rgba(255,255,255,0.9);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+            margin: 30px auto;
+            position: relative;
+        }
+
+        .photo-carousel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .photo-carousel img.active {
+            opacity: 1;
+        }
+
+        .ready-button,
+        .pre-ready-button {
+            padding: 20px 60px;
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .pre-ready-button {
+            background: linear-gradient(135deg, #9932cc, #da70d6);
+            font-size: 24px;
+            padding: 18px 50px;
+        }
+
+        .ready-button::before,
+        .pre-ready-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .ready-button:hover,
+        .pre-ready-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255,20,147,0.6);
+        }
+
+        .interlude-screen {
+            text-align: center;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .interlude-text {
+            font-size: 32px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 40px;
+            animation: textGlow 2s ease-in-out infinite;
+            max-width: 90%;
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+            50% { text-shadow: 0 0 20px rgba(255,255,255,0.8); }
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #ff6b9d, #c0c0ff);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            position: relative;
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.5s ease;
+        }
+
+        .question-card.blue {
+            background: linear-gradient(135deg, #00bfff, #1e90ff);
+        }
+
+        .question-card.green {
+            background: linear-gradient(135deg, #00fa9a, #32cd32);
+        }
+
+        .question-card::before {
+            content: '❤️‍🔥💝💕🥰';
+            position: absolute;
+            font-size: 80px;
+            opacity: 0.15;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: heartBeat 1.5s infinite;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .card-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid white;
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: white;
+        }
+
+        .question-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .answer-btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 3px solid white;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .answer-btn:hover {
+            transform: scale(1.05);
+            background: rgba(255,255,255,0.4);
+        }
+
+        .answer-btn.correct {
+            background: #28a745;
+            border-color: #28a745;
+            animation: correctPulse 0.5s ease;
+        }
+
+        .answer-btn.incorrect {
+            background: #dc3545;
+            border-color: #dc3545;
+            animation: incorrectShake 0.5s ease;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .feedback-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 20px rgba(0,0,0,0.5);
+            z-index: 1000;
+            animation: feedbackPop 0.5s ease;
+        }
+
+        @keyframes feedbackPop {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 3px solid white;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.3);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .text-input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .range-container {
+            width: 100%;
+            padding: 20px 0;
+        }
+
+        .range-slider {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.3);
+            outline: none;
+        }
+
+        .range-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .final-scene {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+            height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        .conversation-photo {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            object-fit: cover;
+            background: white;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .conversation-photo.speaking {
+            opacity: 1;
+            animation: speaking 0.5s ease;
+        }
+
+        @keyframes speaking {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        .vase-container {
+            width: 220px;
+            height: 280px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+        }
+
+        .vase-container img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+
+        .neon-text {
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            animation: neonGlow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes neonGlow {
+            0%, 100% {
+                text-shadow: 0 0 10px #fff,
+                           0 0 20px #fff,
+                           0 0 30px #ff1493,
+                           0 0 40px #ff1493,
+                           0 0 50px #ff1493;
+            }
+            50% {
+                text-shadow: 0 0 20px #fff,
+                           0 0 30px #ff69b4,
+                           0 0 40px #ff69b4,
+                           0 0 50px #ff69b4,
+                           0 0 60px #ff69b4;
+            }
+        }
+
+        .slide-from-left {
+            animation: slideFromLeft 0.8s ease;
+        }
+
+        .slide-from-right {
+            animation: slideFromRight 0.8s ease;
+        }
+
+        @keyframes slideFromLeft {
+            from { transform: translateX(-100vw); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideFromRight {
+            from { transform: translateX(100vw); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .lighter-bg {
+            background: linear-gradient(180deg, #ffb6c1 0%, #ffc0cb 25%, #dda0dd 50%, #d8bfd8 75%, #e6e6fa 100%);
+        }
+
+        .four-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .two-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        #speechBubble {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -150%);
+            background: rgba(255, 255, 255, 0.97);
+            color: #ff1493;
+            padding: 20px 32px;
+            border-radius: 40px;
+            font-size: 24px;
+            font-weight: bold;
+            max-width: 90%;
+            text-align: center;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.4);
+            border: 6px solid #ff69b4;
+            opacity: 0;
+            transition: all 0.6s ease;
+            z-index: 100;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 480px) {
+            #speechBubble {
+                font-size: 19px;
+                padding: 16px 24px;
+                white-space: normal;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ARKA PLAN VİDEO -->
+    <video id="bgVideo" autoplay muted loop playsinline preload="auto"></video>
+
+    <div class="overlay-effects">
+        <div class="hearts-pattern" id="heartsPattern"></div>
+    </div>
+
+    <div class="content-container" id="contentContainer">
+        <!-- Ana ekranlar buraya dinamik olarak eklenecek -->
+    </div>
+
+    <!-- Ses dosyaları -->
+    <audio id="soundStart" src="sesler/baslangic.mp3"></audio>
+    <audio id="soundInterlude1" src="sesler/ara1.mp3"></audio>
+    <audio id="soundInterlude2" src="sesler/ara2.mp3"></audio>
+    <audio id="soundInterlude3" src="sesler/ara3.mp3"></audio>
+    <audio id="soundFinal" src="sesler/final.mp3"></audio>
+    <audio id="soundEnd" src="sesler/son.mp3"></audio>
+    <audio id="soundCard1" src="sesler/1.mp3"></audio>
+    <audio id="soundCard2" src="sesler/3.mp3"></audio>
+    <audio id="soundCard3" src="sesler/2.mp3"></audio>
+    <audio id="soundCard4" src="sesler/4.mp3"></audio>
+    <audio id="soundCard5" src="sesler/6.mp3"></audio>
+    <audio id="soundCard6" src="sesler/5.mp3"></audio>
+
+    <!-- Final cevap sesleri -->
+    <audio id="finalAnswerEvet" src="sesler/son1.mp3"></audio>
+    <audio id="finalAnswerHayir" src="sesler/son2.mp3"></audio>
+    <audio id="finalAnswerYanlisZaman" src="sesler/son3.mp3"></audio>
+
+    <!-- Arka plan müzikleri -->
+    <audio id="backgroundMusic" loop preload="auto">
+        <source src="ses.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="finalBackgroundMusic" loop preload="auto">
+        <source src="sesler/ensonmuzik.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // KENDİ BİLGİLERİNİ BURAYA YAZ
+        const MY_EMAIL = "melihyildirim.q.23@gmail.com";
+        const FORMSPREE_URL = "https://formspree.io/f/xrbnoyob"; // Formspree'den al
+
+        const state = {
+            currentCard: 0,
+            answers: {},
+            finalChoice: null
+        };
+
+        function playSound(id) {
+            const sound = document.getElementById(id);
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play().catch(() => {});
+            }
+        }
+
+        function startBackgroundMusic() {
+            const bg = document.getElementById('backgroundMusic');
+            bg.volume = 0.35;
+            bg.play().catch(() => {});
+        }
+
+        function changeToFinalBackgroundMusic() {
+            const oldBg = document.getElementById('backgroundMusic');
+            const newBg = document.getElementById('finalBackgroundMusic');
+            oldBg.pause();
+            oldBg.currentTime = 0;
+            newBg.volume = 0.4;
+            newBg.play().catch(() => {});
+        }
+
+        function playFinalAnswerSound(choice) {
+            if (choice === 'Evet') playSound('finalAnswerEvet');
+            else if (choice === 'Hayır') playSound('finalAnswerHayir');
+            else playSound('finalAnswerYanlisZaman');
+        }
+
+        async function sendAnswersToEmail() {
+            const answersText = Object.keys(state.answers)
+                .map(key => `${key}: ${state.answers[key]}`)
+                .join('\n');
+
+            const body = {
+                email: MY_EMAIL,
+                _subject: `Eda'dan cevap! ${new Date().toLocaleString('tr-TR')}`,
+                message: `Son karar: ${state.finalChoice}\n\n${answersText}`
+            };
+
+            try {
+                await fetch(FORMSPREE_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(body),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            } catch (e) {
+                console.log("Mail gönderilemedi");
+            }
+        }
+
+        // VİDEO KESİN ÇALIŞSIN
+        function updateVideoSource() {
+            const video = document.getElementById('bgVideo');
+            const isPortrait = window.innerHeight > window.innerWidth;
+            video.src = isPortrait ? "Timeline 4.mp4" : "Timeline 4.mp4";
+            video.play().catch(() => {});
+        }
+
+        window.addEventListener('resize', updateVideoSource);
+        window.addEventListener('orientationchange', updateVideoSource);
+        document.addEventListener('DOMContentLoaded', updateVideoSource);
+
+        // İlk tıklama ile video başlat (mobilde çalışması için)
+        let videoStarted = false;
+        document.body.addEventListener('click', () => {
+            if (!videoStarted) {
+                updateVideoSource();
+                videoStarted = true;
+            }
+        }, { once: true });
+
+        const photos = {
+            start: ['resim1.png','resim2.png','resim3.png'],
+            interlude1: ['resim1.png','resim2.png','resim3.png'],
+            interlude2: ['resim1.png','resim2.png','resim3.png'],
+            interlude3: ['resim1.png','resim2.png','resim3.png'],
+            left: ['resim4.png','resim5.png','resim6.png'],
+            right: ['resim7.png','resim8.png','resim9.png']
+        };
+
+        function preloadImages(array) {
+            array.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+        }
+
+        preloadImages(photos.start);
+        preloadImages(photos.interlude1);
+        preloadImages(photos.interlude2);
+        preloadImages(photos.interlude3);
+        preloadImages(photos.left);
+        preloadImages(photos.right);
+        preloadImages(['indir.png']);
+
+        const cards = [
+            { question: 'koltuk numaram kaçç 😁', options: ['9', '8'], correct: 0, color: 'blue' },
+            { question: 'benn nereliyim 😜', options: ['Bingöl', 'Elazığ'], correct: 1, color: 'green' },
+            { question: 'sana yolda verdiğim hediye neydi 😉', options: ['kaptan amerika figürü', 'yeşil uzaylı figürü'], correct: 0, color: 'blue' },
+            { question: 'Beni tanıdığın sürede en çok hoşuna giden özeliğim ne', type: 'text', color: 'green' },
+            { question: 'bana ne kadar güveniyorsun', options: ['sen kimsin 🥱', 'biraz güveniyorum 🤏', 'bunu sorman hata 💝', 'sana hayatımı emanet ederim 🫡'], type: 'trust', color: 'blue' },
+            { question: 'benden nekadar hoşlanıyorsunnn 😍', type: 'range', color: 'green' }
+        ];
+
+        function createHearts() {
+            const heartsPattern = document.getElementById('heartsPattern');
+            const heartEmojis = ['♾️', '❤️', '❤️‍🔥', '🥰', '💕', '😘'];
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 4 + 's';
+                heartsPattern.appendChild(heart);
+            }
+        }
+
+        function createPhotoCarousel(photosArray, containerId = 'photoCarousel') {
+            const carousel = document.createElement('div');
+            carousel.className = 'photo-carousel';
+            carousel.id = containerId;
+            photosArray.forEach((photo, index) => {
+                const img = document.createElement('img');
+                img.src = photo;
+                img.alt = `Fotoğraf ${index + 1}`;
+                img.loading = 'eager';
+                if (index === 0) img.classList.add('active');
+                carousel.appendChild(img);
+            });
+            return carousel;
+        }
+
+        function startPhotoCarousel(containerId, photosArray, duration = 4000) {
+            let currentIndex = 0;
+            const interval = setInterval(() => {
+                const container = document.getElementById(containerId);
+                if (!container) { clearInterval(interval); return; }
+                const images = container.querySelectorAll('img');
+                images[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex + 1) % images.length;
+                images[currentIndex].classList.add('active');
+            }, duration);
+            return interval;
+        }
+
+        function showPreStartScreen() {
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+            container.classList.add('blur-bg');
+
+            const photoCarousel = createPhotoCarousel(photos.start);
+            container.appendChild(photoCarousel);
+
+            const button = document.createElement('button');
+            button.className = 'pre-ready-button glow-pulse';
+            button.textContent = 'Hazırım demeden önce';
+            button.onclick = () => {
+                playSound('soundStart'); 
+                setTimeout(() => {
+                    showRealStartScreen();
+                }, 2000);
+            };
+            container.appendChild(button);
+            startPhotoCarousel('photoCarousel', photos.start);
+        }
+
+        function showRealStartScreen() {
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+            container.classList.add('blur-bg');
+
+            const photoCarousel = createPhotoCarousel(photos.start, 'realStartCarousel');
+            container.appendChild(photoCarousel);
+
+            const button = document.createElement('button');
+            button.className = 'ready-button glow-pulse';
+            button.textContent = 'Hazırım';
+            button.onclick = () => {
+                startBackgroundMusic();
+                showInterlude1();
+            };
+            container.appendChild(button);
+            startPhotoCarousel('realStartCarousel', photos.start);
+        }
+
+        function showInterlude1() {
+            playSound('soundInterlude1');
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+            container.classList.remove('blur-bg');
+
+            const interludeDiv = document.createElement('div');
+            interludeDiv.className = 'interlude-screen';
+            const text = document.createElement('div');
+            text.className = 'interlude-text';
+            text.textContent = 'ilk olarak kolay sorulardan başlayalım edacım 😜';
+            interludeDiv.appendChild(text);
+            const photoCarousel = createPhotoCarousel(photos.interlude1, 'interludeCarousel1');
+            interludeDiv.appendChild(photoCarousel);
+            container.appendChild(interludeDiv);
+
+            const carouselInterval = startPhotoCarousel('interludeCarousel1', photos.interlude1);
+            setTimeout(() => {
+                clearInterval(carouselInterval);
+                state.currentCard = 0;
+                showNextCard();
+            }, photos.interlude1.length * 4000 + 1000);
+        }
+
+        function showInterlude2() {
+            playSound('soundInterlude2');
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+            const interludeDiv = document.createElement('div');
+            interludeDiv.className = 'interlude-screen';
+            const text = document.createElement('div');
+            text.className = 'interlude-text';
+            text.textContent = 'kolay sorular bitti şimdi sıra zor sorularda edoşş 😗';
+            interludeDiv.appendChild(text);
+            const photoCarousel = createPhotoCarousel(photos.interlude2, 'interludeCarousel2');
+            interludeDiv.appendChild(photoCarousel);
+            container.appendChild(interludeDiv);
+            const carouselInterval = startPhotoCarousel('interludeCarousel2', photos.interlude2);
+            setTimeout(() => {
+                clearInterval(carouselInterval);
+                showNextCard();
+            }, photos.interlude2.length * 4000 + 1000);
+        }
+
+        function showInterlude3() {
+            playSound('soundInterlude3');
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+            const interludeDiv = document.createElement('div');
+            interludeDiv.className = 'interlude-screen';
+            const text = document.createElement('div');
+            text.className = 'interlude-text';
+            text.textContent = 'soru cevaplamaktan sıkıldınnmııı ozaman biraz konuşalım 😉';
+            interludeDiv.appendChild(text);
+            const photoCarousel = createPhotoCarousel(photos.interlude3, 'interludeCarousel3');
+            interludeDiv.appendChild(photoCarousel);
+            container.appendChild(interludeDiv);
+            const carouselInterval = startPhotoCarousel('interludeCarousel3', photos.interlude3, 4000);
+            setTimeout(() => {
+                clearInterval(carouselInterval);
+                container.innerHTML = '';
+                setTimeout(() => showFinalScene(), 1000);
+            }, photos.interlude3.length * 4000 + 1000);
+        }
+
+        function showNextCard() {
+            if (state.currentCard >= cards.length) {
+                showInterlude3();
+                return;
+            }
+
+            const cardSounds = ['soundCard1','soundCard2','soundCard3','soundCard4','soundCard5','soundCard6'];
+            playSound(cardSounds[state.currentCard]);
+
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+
+            const cardData = cards[state.currentCard];
+            const card = document.createElement('div');
+            card.className = `question-card ${cardData.color} ${state.currentCard % 2 === 0 ? 'slide-from-left' : 'slide-from-right'}`;
+
+            const cardPhoto = document.createElement('img');
+            cardPhoto.className = 'card-photo';
+            cardPhoto.src = 'resim1.png';
+            cardPhoto.alt = 'Kart Fotoğrafı';
+            card.appendChild(cardPhoto);
+
+            const question = document.createElement('div');
+            question.className = 'question-text';
+            question.textContent = cardData.question;
+            card.appendChild(question);
+
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'answer-options';
+
+            if (cardData.type === 'text') {
+                const input = document.createElement('textarea');
+                input.className = 'text-input';
+                input.placeholder = 'Cevabını buraya yaz (içinden gecen her şeyi yazabilirsin)🙃...';
+                input.rows = 4;
+                optionsDiv.appendChild(input);
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = 'Devam et tatlım 😘';
+                btn.onclick = () => {
+                    state.answers[`Soru ${state.currentCard + 1}`] = input.value || '(boş)';
+                    state.currentCard++;
+                    goToNextScreen();
+                };
+                optionsDiv.appendChild(btn);
+            } else if (cardData.type === 'range') {
+                const rangeContainer = document.createElement('div');
+                rangeContainer.className = 'range-container';
+                const slider = document.createElement('input');
+                slider.type = 'range';
+                slider.min = '0';
+                slider.max = '100';
+                slider.value = '50';
+                slider.className = 'range-slider';
+                const valueDisplay = document.createElement('div');
+                valueDisplay.className = 'range-value';
+                valueDisplay.textContent = '50%';
+                slider.oninput = (e) => { valueDisplay.textContent = e.target.value + '%'; };
+                rangeContainer.appendChild(slider);
+                rangeContainer.appendChild(valueDisplay);
+                optionsDiv.appendChild(rangeContainer);
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = 'İşte bu kadar';
+                btn.onclick = () => {
+                    state.answers[`Soru ${state.currentCard + 1}`] = slider.value + '%';
+                    state.currentCard++;
+                    goToNextScreen();
+                };
+                optionsDiv.appendChild(btn);
+            } else if (cardData.type === 'trust') {
+                optionsDiv.classList.add('four-options');
+                cardData.options.forEach((option, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'answer-btn';
+                    btn.textContent = option;
+                    btn.onclick = () => {
+                        state.answers[`Soru ${state.currentCard + 1}`] = option;
+                        state.currentCard++;
+                        goToNextScreen();
+                    };
+                    optionsDiv.appendChild(btn);
+                });
+            } else {
+                optionsDiv.classList.add('two-options');
+                cardData.options.forEach((option, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'answer-btn';
+                    btn.textContent = option;
+                    btn.onclick = () => handleAnswer(btn, index === cardData.correct, option);
+                    optionsDiv.appendChild(btn);
+                });
+            }
+
+            card.appendChild(optionsDiv);
+            container.appendChild(card);
+        }
+
+        function handleAnswer(btn, isCorrect, answer) {
+            state.answers[`Soru ${state.currentCard + 1}`] = answer;
+            btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback-message';
+            feedback.textContent = isCorrect ? 'doğru cevap tebrikler edoş 👏' : 'yanlış cevap aşk olsun 🥲';
+            document.body.appendChild(feedback);
+            setTimeout(() => {
+                feedback.remove();
+                state.currentCard++;
+                goToNextScreen();
+            }, 2000);
+        }
+
+        function goToNextScreen() {
+            if (state.currentCard === 3) {
+                showInterlude2();
+            } else if (state.currentCard === 6) {
+                showInterlude3();
+            } else {
+                showNextCard();
+            }
+        }
+
+        function showFinalScene() {
+            playSound('soundFinal');
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+
+            const scene = document.createElement('div');
+            scene.className = 'final-scene';
+
+            const leftPhoto = document.createElement('img');
+            leftPhoto.className = 'conversation-photo';
+            leftPhoto.id = 'leftPhoto';
+            leftPhoto.src = photos.left[0];
+            leftPhoto.loading = 'eager';
+
+            const rightPhoto = document.createElement('img');
+            rightPhoto.className = 'conversation-photo';
+            rightPhoto.id = 'rightPhoto';
+            rightPhoto.src = photos.right[0];
+            rightPhoto.loading = 'eager';
+
+            const vaseContainer = document.createElement('div');
+            vaseContainer.className = 'vase-container';
+            const vaseImg = document.createElement('img');
+            vaseImg.src = 'indir.png';
+            vaseImg.alt = 'Vazo';
+            vaseContainer.appendChild(vaseImg);
+
+            const speechBubble = document.createElement('div');
+            speechBubble.id = 'speechBubble';
+
+            scene.appendChild(leftPhoto);
+            scene.appendChild(vaseContainer);
+            scene.appendChild(rightPhoto);
+            scene.appendChild(speechBubble);
+            container.appendChild(scene);
+
+            simulateConversation();
+        }
+
+        function simulateConversation() {
+            const leftPhoto = document.getElementById('leftPhoto');
+            const rightPhoto = document.getElementById('rightPhoto');
+            const speechBubble = document.getElementById('speechBubble');
+
+            let photoIndex = 0;
+            let dialogueIndex = 0;
+
+            const dialogues = [
+                "eda bi şey dicem.. ❤️",
+                "söyle canım?",
+                "seni gerçekten çok seviyorum ya..",
+                "öylemiii melih",
+                "bana hep böyle hissettirdiğin için teşekkür ederim",
+                "ben teşekkür ederim iyiki ki varsın ♾️",
+                "seninle geçirdiğim her an çok özel",
+                "benim için de öyle.. hiç bitmesin istiyom",
+                "o zaman hiç bitmesin mi?",
+                "bitmesin.. sonsuza kadar ❤️‍🔥"
+            ];
+
+            const interval = setInterval(() => {
+                photoIndex = (photoIndex + 1) % 3;
+                leftPhoto.src = photos.left[photoIndex];
+                rightPhoto.src = photos.right[photoIndex];
+
+                speechBubble.textContent = dialogues[dialogueIndex];
+                speechBubble.style.opacity = '0';
+                speechBubble.style.transform = 'translate(-50%, -150%) scale(0.9)';
+
+                setTimeout(() => {
+                    speechBubble.style.opacity = '1';
+                    speechBubble.style.transform = 'translate(-50%, -150%) scale(1.05)';
+                }, 100);
+
+                setTimeout(() => {
+                    speechBubble.style.transform = 'translate(-50%, -150%) scale(1)';
+                }, 600);
+
+                if (dialogueIndex % 2 === 0) {
+                    speechBubble.style.left = '48%';
+                    leftPhoto.classList.add('speaking');
+                    rightPhoto.classList.remove('speaking');
+                } else {
+                    speechBubble.style.left = '52%';
+                    rightPhoto.classList.add('speaking');
+                    leftPhoto.classList.remove('speaking');
+                }
+
+                dialogueIndex++;
+
+                if (dialogueIndex >= dialogues.length) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        speechBubble.style.opacity = '0';
+                        setTimeout(showFinalCard, 1500);
+                    }, 3000);
+                }
+            }, 4300);
+        }
+
+        function showFinalCard() {
+            playSound('soundEnd');
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+
+            const card = document.createElement('div');
+            card.className = 'question-card blue slide-from-left';
+
+            const question = document.createElement('div');
+            question.className = 'question-text';
+            question.textContent = 'ozaman benim ile sevgili olmak istermisin ❤️‍🔥😍';
+            card.appendChild(question);
+
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'answer-options';
+
+            const options = ['Evet', 'Hayır', 'yanlış zaman'];
+            const messages = {
+                'Evet': 'tebrikler hayatının en iyi kararını verdin eda ☯️♾️',
+                'Hayır': 'sadece beraber daha mutlu oluruz diye düşündüm amaa ozman belki başka hayatta 💔💔',
+                'yanlış zaman': 'bu seçeneği işaretlediğine göre zamanı değil ama benim sevgim zamansızdır buyüzden seni Infinity olarak kaydettim yinede sen bilirsin edoş 🥲'
+            };
+
+            options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = option;
+                btn.onclick = () => {
+                    state.finalChoice = option;
+                    playFinalAnswerSound(option);
+                    changeToFinalBackgroundMusic();
+                    sendAnswersToEmail();
+                    showFinalMessage(messages[option]);
+                };
+                optionsDiv.appendChild(btn);
+            });
+
+            card.appendChild(optionsDiv);
+            container.appendChild(card);
+        }
+
+        function showFinalMessage(message) {
+            playSound('soundEnd');
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'neon-text';
+            messageDiv.textContent = message;
+            container.appendChild(messageDiv);
+
+            setTimeout(() => {
+                messageDiv.textContent = 'herşey için teşekkürler (edoşş 😉)';
+            }, 4000);
+        }
+
+        createHearts();
+        showPreStartScreen();
+
+        document.addEventListener('click', startBackgroundMusic, { once: true });
+    </script>
+</body>
+</html>
