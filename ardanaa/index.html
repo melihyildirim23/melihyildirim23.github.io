@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Ardahan Döner - Menü</title>
+    <link rel="icon" type="image/x-icon" href="https://img.icons8.com/color/48/000000/doner-kebab.png"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+    <style>
+        :root {
+            --bg-main:      #1a140f;           /* koyu kahve */
+            --bg-card:      #2a1f18;           /* biraz daha açık kart zemini */
+            --gold:         #d4af37;           /* altın sarısı */
+            --gold-dark:    #b8972e;
+            --gold-light:   #e8c670;
+            --text-light:   #f5f0e8;
+            --text-muted:   #c9b9a5;
+            --accent:       #c8102e;           /* hafif kırmızı detay */
+            --radius:       16px;
+            --radius-lg:    24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-light);
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(212,175,55,0.04) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(212,175,55,0.03) 0%, transparent 50%);
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26,20,15,0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(212,175,55,0.12);
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            height: 85px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--gold);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            margin-left: 40px;
+            font-weight: 500;
+            font-size: 1.05rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--gold);
+            font-size: 1.9rem;
+            cursor: pointer;
+        }
+
+        /* Hero */
+        .hero {
+            height: 100vh;
+            min-height: 720px;
+            background: linear-gradient(rgba(26,20,15,0.65), rgba(26,20,15,0.85)),
+                        url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1600&q=85') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3.2rem, 8vw, 6.2rem);
+            color: var(--gold);
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.7);
+        }
+
+        .hero-content p {
+            font-size: 1.4rem;
+            max-width: 680px;
+            margin: 0 auto 40px;
+            color: var(--text-muted);
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: var(--bg-main);
+            padding: 16px 48px;
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.35s ease;
+            box-shadow: 0 8px 30px rgba(212,175,55,0.35);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 45px rgba(212,175,55,0.45);
+            background: var(--gold-light);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            font-size: 3.4rem;
+            color: var(--gold);
+            margin: 120px 0 70px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+        }
+
+        /* Kategori Kartları */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 35px;
+            margin-bottom: 120px;
+        }
+
+        .category-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border: 1px solid rgba(212,175,55,0.12);
+        }
+
+        .category-card:hover {
+            transform: translateY(-14px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.55);
+            border-color: rgba(212,175,55,0.28);
+        }
+
+        .category-header {
+            height: 240px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .category-header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(26,20,15,0.75), transparent 40%);
+        }
+
+        .category-title {
+            position: absolute;
+            bottom: 30px;
+            left: 35px;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.3rem;
+            color: white;
+            text-shadow: 0 3px 12px rgba(0,0,0,0.8);
+        }
+
+        /* Modal */
+        .menu-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(26,20,15,0.94);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.45s ease;
+        }
+
+        .menu-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            width: 92%;
+            max-width: 1240px;
+            max-height: 94vh;
+            border-radius: var(--radius-lg);
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.7);
+            border: 1px solid rgba(212,175,55,0.18);
+            animation: modalPop 0.5s ease;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.92); opacity: 0; }
+            to   { transform: scale(1);   opacity: 1; }
+        }
+
+        .modal-close {
+            position: sticky;
+            top: 20px;
+            right: 25px;
+            font-size: 2.8rem;
+            color: var(--gold);
+            cursor: pointer;
+            background: rgba(26,20,15,0.7);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            transition: all 0.35s ease;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+            margin-left: auto;
+            margin-right: 25px;
+            margin-top: 20px;
+        }
+
+        .modal-close:hover {
+            background: var(--gold);
+            color: var(--bg-main);
+            transform: rotate(90deg);
+        }
+
+        .modal-header h2 {
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            font-size: 3rem;
+            color: var(--gold);
+            margin: 30px 0 15px;
+        }
+
+        .modal-body {
+            padding: 20px 40px 60px;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 35px;
+        }
+
+        .item-card {
+            background: rgba(212,175,55,0.04);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid rgba(212,175,55,0.12);
+            transition: all 0.35s ease;
+        }
+
+        .item-card:hover {
+            background: rgba(212,175,55,0.08);
+            border-color: rgba(212,175,55,0.3);
+            transform: translateY(-6px);
+        }
+
+        .item-image {
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .item-content {
+            padding: 24px;
+        }
+
+        .item-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--gold-light);
+        }
+
+        .item-desc {
+            color: var(--text-muted);
+            font-size: 0.97rem;
+            margin-bottom: 16px;
+        }
+
+        .item-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 80px 20px 40px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(212,175,55,0.12);
+        }
+
+        @media (max-width: 992px) {
+            .modal-content { width: 95%; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 85px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 85px);
+                background: var(--bg-main);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: left 0.45s ease;
+            }
+
+            .nav-links.active { left: 0; }
+            .nav-toggle { display: block; }
+
+            .hero-content h1 { font-size: 3.8rem; }
+            .modal-header h2 { font-size: 2.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">Ardahan Döner</a>
+
+            <div class="nav-links" id="navLinks">
+                <a href="#menu">Menü</a>
+                <a href="#iletisim">İletişim</a>
+                <a href="#konum">Konum</a>
+            </div>
+
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Gerçek Et Lezzeti</h1>
+            <p>Odun ateşinde pişen dana döner ve geleneksel kebap çeşitleri</p>
+            <a href="#menu" class="btn-primary">Menüyü İncele</a>
+        </div>
+    </section>
+
+    <div class="container">
+
+        <div style="text-align:center; margin:80px 0; color:var(--text-muted);">
+            <div style="font-size:2.8rem; color:var(--gold);">★★★★☆ 4.4</div>
+            <p style="margin-top:12px; font-size:1.3rem;">
+                <strong>496 Google Yorumu</strong> • Ortalama Kişi Başı 400–600 ₺
+            </p>
+        </div>
+
+        <h2 class="section-title" id="menu">Menümüz</h2>
+
+        <!-- Kategori Kartları -->
+        <div class="category-grid">
+
+            <div class="category-card" data-category="doner">
+                <div class="category-header" style="background-image: url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1200');">
+                    <h3 class="category-title">Döner Menüleri</h3>
+                </div>
+            </div>
+
+            <div class="category-card" data-category="kebap">
+                <div class="category-header" style="background-image: url('https://images.unsplash.com/photo-1599921841143-819d6b4faba6?w=1200');">
+                    <h3 class="category-title">Kebap Çeşitleri</h3>
+                </div>
+            </div>
+
+            <div class="category-card" data-category="kahvalti">
+                <div class="category-header" style="background-image: url('https://images.unsplash.com/photo-1517248135467-2c7ed3ab7229?w=1200');">
+                    <h3 class="category-title">Kahvaltılıklar</h3>
+                </div>
+            </div>
+
+            <div class="category-card" data-category="tatli">
+                <div class="category-header" style="background-image: url('https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=1200');">
+                    <h3 class="category-title">Tatlılar</h3>
+                </div>
+            </div>
+
+            <div class="category-card" data-category="sicak-icecek">
+                <div class="category-header" style="background-image: url('https://images.unsplash.com/photo-1577968898879-5a1d95d2e6a0?w=1200');">
+                    <h3 class="category-title">Sıcak İçecekler</h3>
+                </div>
+            </div>
+
+            <div class="category-card" data-category="soguk-icecek">
+                <div class="category-header" style="background-image: url('https://images.unsplash.com/photo-1621263764928-df1444c5e8b6?w=1200');">
+                    <h3 class="category-title">Soğuk İçecekler</h3>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Modal -->
+        <div class="menu-modal" id="menuModal">
+            <div class="modal-content">
+                <span class="modal-close" id="closeModal">×</span>
+
+                <div class="modal-header">
+                    <h2 id="modalTitle">Menü</h2>
+                </div>
+
+                <div class="modal-body" id="modalBody">
+                    <!-- JS ile doldurulacak -->
+                </div>
+            </div>
+        </div>
+
+        <!-- İletişim & Konum Bölümü -->
+        <section id="iletisim" style="margin:140px 0 100px;">
+            <h2 class="section-title">İletişim & Konum</h2>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:50px; max-width:1100px; margin:0 auto;" class="contact-grid">
+
+                <div>
+                    <h3 style="color:var(--gold); font-size:2rem; margin-bottom:25px;">Bize Ulaşın</h3>
+                    <p style="font-size:1.25rem; color:var(--text-muted); margin-bottom:15px;">
+                        <i class="fas fa-map-marker-alt" style="color:var(--gold); margin-right:12px;"></i>
+                        Kaptanpaşa, İnönü Cd. No:26/B<br>
+                         75000 Ardahan Merkez / Ardahan
+                    </p>
+                    <p style="font-size:1.25rem; color:var(--text-muted); margin-bottom:15px;">
+                        <i class="fas fa-phone-alt" style="color:var(--gold); margin-right:12px;"></i>
+                        (0478) 211 61 22
+                    </p>
+                    <p style="font-size:1.25rem; color:var(--text-muted);">
+                        <i class="fas fa-clock" style="color:var(--gold); margin-right:12px;"></i>
+                        Her gün 10:00 – 22:00
+                    </p>
+                </div>
+
+                <div id="konum">
+                    <h3 style="color:var(--gold); font-size:2rem; margin-bottom:25px;">Konumumuz</h3>
+                    <div style="border-radius:var(--radius-lg); overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,0.5); border:1px solid rgba(212,175,55,0.15);">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2995.874!2d42.490!3d41.110!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x407b!2sArdahan!5e0!3m2!1str!2str!4v1730000000000" width="100%" height="380" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>© 2026 Ardahan Döner • Tüm hakları saklıdır.</p>
+        <p style="margin-top:12px; opacity:0.7;">El yapımı lezzetler • Geleneksel tatlar • Sıcak hizmet</p>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('navToggle')?.addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        // Modal
+        const modal = document.getElementById('menuModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const closeBtn = document.getElementById('closeModal');
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        closeBtn.onclick = closeModal;
+        modal.onclick = e => { if(e.target === modal) closeModal(); };
+
+        // Kategori içerikleri (kısaltılmış örnek - istediğiniz kadar detay ekleyebilirsiniz)
+        const categories = {
+            doner: `
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-image" style="background-image:url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800');"></div>
+                        <div class="item-content">
+                            <div class="item-name">Et Döner Tabak</div>
+                            <div class="item-desc">Odun ateşinde dana döner, pilav, lavaş, köz biber-domates</div>
+                            <div class="item-price">285 ₺</div>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-image" style="background-image:url('https://images.unsplash.com/photo-1626645738538-2f3d6f751e43?w=800');"></div>
+                        <div class="item-content">
+                            <div class="item-name">İskender Döner</div>
+                            <div class="item-desc">Yoğurt, tereyağı, domates sosu ile</div>
+                            <div class="item-price">380 ₺</div>
+                        </div>
+                    </div>
+                </div>
+            `,
+
+            kebap: `
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-image" style="background-image:url('https://images.unsplash.com/photo-1599921841143-819d6b4faba6?w=800');"></div>
+                        <div class="item-content">
+                            <div class="item-name">Adana Kebap</div>
+                            <div class="item-desc">Acılı kıyma kebabı, lavaş & garnitür</div>
+                            <div class="item-price">320 ₺</div>
+                        </div>
+                    </div>
+                </div>
+            `,
+
+            kahvalti: `
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-image" style="background-image:url('https://images.unsplash.com/photo-1517248135467-2c7ed3ab7229?w=800');"></div>
+                        <div class="item-content">
+                            <div class="item-name">Tam Kahvaltı Tabağı</div>
+                            <div class="item-desc">Peynir çeşitleri, zeytin, yumurta, menemen, bal-kaymak</div>
+                            <div class="item-price">220 ₺</div>
+                        </div>
+                    </div>
+                </div>
+            `,
+
+            tatli: `
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-image" style="background-image:url('https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=800');"></div>
+                        <div class="item-content">
+                            <div class="item-name">Baklava Çeşitleri</div>
+                            <div class="item-desc">Fıstıklı • Cevizli • Şöbiyet</div>
+                            <div class="item-price">45–65 ₺ / adet</div>
+                        </div>
+                    </div>
+                </div>
+            `,
+
+            "sicak-icecek": `
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-content">
+                            <div class="item-name">Türk Kahvesi</div>
+                            <div class="item-desc">Sade / Orta / Şekerli</div>
+                            <div class="item-price">65 ₺</div>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-content">
+                            <div class="item-name">Demlik Çay</div>
+                            <div class="item-price">25 ₺</div>
+                        </div>
+                    </div>
+                </div>
+            `,
+
+            "soguk-icecek": `
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-content">
+                            <div class="item-name">Ayran (1 Litre)</div>
+                            <div class="item-price">45 ₺</div>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-content">
+                            <div class="item-name">Şalgam Suyu (1 Litre)</div>
+                            <div class="item-price">55 ₺</div>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
+
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const cat = card.dataset.category;
+                const title = card.querySelector('.category-title').textContent;
+
+                modalTitle.textContent = title;
+                modalBody.innerHTML = categories[cat] || '<p style="text-align:center; padding:80px 0;">İçerik hazırlanıyor...</p>';
+                
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+    </script>
+</body>
+</html>
