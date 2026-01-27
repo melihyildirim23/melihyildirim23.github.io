@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Hoş Geldin Edoş</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    .neon {
+      text-shadow: 0 0 5px #ff00c8, 0 0 10px #ff00c8, 0 0 20px #ff00c8;
+      color: #ff00c8;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    input {
+      margin: 10px 0;
+      padding: 12px;
+      width: 100%;
+      max-width: 300px;
+      border: none;
+      border-radius: 5px;
+      background: #1a1a1a;
+      color: #fff;
+      box-shadow: 0 0 5px #ff00c8;
+      font-size: 1em;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      max-width: 300px;
+      background: #ff00c8;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 10px #ff00c8;
+      font-size: 1em;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .heart-screen {
+      text-align: center;
+    }
+
+    .heart-screen .emoji {
+      font-size: 6em;
+      margin-bottom: 20px;
+    }
+
+    .heart-screen .subtitle {
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
+
+    .heart-screen .small {
+      font-size: 0.9em;
+      margin-top: 5px;
+      color: #ff00c8;
+    }
+
+    .error {
+      margin-top: 15px;
+      color: #ff00c8;
+      font-size: 1em;
+      text-shadow: 0 0 5px #ff00c8;
+    }
+
+    audio {
+      display: none;
+    }
+
+    /* Mobil uyum için */
+    @media (max-width: 480px) {
+      .heart-screen .emoji {
+        font-size: 4em;
+      }
+      .heart-screen .subtitle {
+        font-size: 1em;
+      }
+      .heart-screen .small {
+        font-size: 0.8em;
+      }
+      input, button {
+        max-width: 90%;
+        font-size: 0.9em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="login-screen">
+    <h2 class="neon">Hoş Geldinn<br><small>harflerin hepsi küçük</small></h2>
+    <input type="text" id="ad" placeholder="Adın">
+    <input type="text" id="soyad" placeholder="Soyadın">
+    <input type="text" id="sehir" placeholder="Şehir">
+    <input type="text" id="hile" placeholder="Hile kodu (hatırla:)">
+    <button onclick="enterSite()">Giriş Yap 💕</button>
+    <div class="error hidden" id="error-msg">doğru bildiğine emin misin</div>
+  </div>
+
+  <div class="container hidden heart-screen" id="heart-screen">
+    <div class="emoji">❤️‍🩹</div>
+    <div class="neon subtitle">BİRAZ GEÇ OLMADI MI SENCE.......</div>
+    <div class="small">(5309074923)</div>
+  </div>
+
+  <audio id="bg-music" src="music.mp3" loop autoplay></audio>
+
+  <script>
+    function enterSite() {
+      const ad = document.getElementById('ad').value.trim().toLowerCase();
+      const soyad = document.getElementById('soyad').value.trim().toLowerCase();
+      const sehir = document.getElementById('sehir').value.trim().toLowerCase();
+      const hile = document.getElementById('hile').value.trim().toLowerCase();
+      const errorMsg = document.getElementById('error-msg');
+
+      if (ad === "eda" && soyad === "arlı" && sehir === "bingöl" && hile === "eda") {
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('heart-screen').classList.remove('hidden');
+        document.getElementById('bg-music').play();
+      } else {
+        errorMsg.classList.remove('hidden');
+      }
+    }
+  </script>
+</body>
+</html>
